@@ -32,12 +32,12 @@
 
             {
                 "type": "field",
-                "outboundTag": "wireguard",
+                "outboundTag": "IPv4_out",
                 "domain": ["geosite:google"]
             },
             {
                 "type": "field",
-                "outboundTag": "wireguard",
+                "outboundTag": "IPv4_out",
                 "domain": ["xxxxx.com"]
             },
             {
@@ -45,18 +45,18 @@
                 "domain": [
                     "geosite:cn"
                 ],
-                "outboundTag": "wireguard"
+                "outboundTag": "IPv4_out"
             },
             {
                 "type": "field",
                 "ip": [
                     "geoip:cn"
                 ],
-                "outboundTag": "wireguard"
+                "outboundTag": "IPv4_out"
             },
             {
                 "type": "field",
-                "outboundTag": "wireguard",
+                "outboundTag": "IPv4_out",
                 "network": "udp,tcp"
             }
 
