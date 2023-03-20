@@ -1,53 +1,112 @@
 {
-	"log": {
-		"access": "/dev/null",
-		"error": "/dev/null",
-		"loglevel": "warning"
-	},
-	"inbounds": [{
-			"port": 10000,
-			"listen": "127.0.0.1",
-			"protocol": "vmess",
-			"settings": {
-				"clients": [{
-					"id": "UUID",
-					"alterId": 0
-				}]
-			},
-			"streamSettings": {
-				"network": "ws",
-				"wsSettings": {
-					"path": "VMESS_WSPATH"
-				}
-			}
-		},
-		{
-			"port": 20000,
-			"listen": "127.0.0.1",
-			"protocol": "vless",
-			"settings": {
-				"clients": [{
-					"id": "UUID"
-				}],
-				"decryption": "none"
-			},
-			"streamSettings": {
-				"network": "ws",
-				"wsSettings": {
-					"path": "VLESS_WSPATH"
-				}
-			}
-		}
-	],
-	"outbounds": [{
-		"protocol": "freedom",
-		"settings": {}
-	}],
-	"dns": {
-		"server": [
-			"8.8.8.8",
-			"8.8.4.4",
-			"localhost"
-		]
-	}
+    "log" : {
+        "access": "/dev/null",
+        "error": "/dev/null",
+        "loglevel": "warning"
+    },
+
+    "inbounds": [
+        {
+            "port": 10000,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    { "id": "UUID", "level": 0}
+                    
+                ],
+                "decryption": "none"
+            },
+            "streamSettings": {
+                "network": "ws",
+                "security": "none",
+                "wsSettings": {
+                    "path": "VMESS_WSPATH"
+                }
+            }
+        }
+
+    ],
+    "routing": {
+        "domainStrategy": "IPOnDemand",
+        "rules": [
+
+            {
+                "type": "field",
+                "outboundTag": "wireguard",
+                "domain": ["geosite:google"]
+            },
+            {
+                "type": "field",
+                "outboundTag": "wireguard",
+                "domain": ["xxxxx.com"]
+            },
+            {
+                "type": "field",
+                "domain": [
+                    "geosite:cn"
+                ],
+                "outboundTag": "wireguard"
+            },
+            {
+                "type": "field",
+                "ip": [
+                    "geoip:cn"
+                ],
+                "outboundTag": "wireguard"
+            },
+            {
+                "type": "field",
+                "outboundTag": "wireguard",
+                "network": "udp,tcp"
+            }
+
+        ]
+    },
+    "outbounds": [
+        {
+            "tag":"IPv4_out",
+            "protocol": "freedom",
+            "settings": {
+                "domainStrategy": "UseIPv4"
+            }
+        },
+        {
+            "tag": "blocked",
+            "protocol": "blackhole",
+            "settings": {
+                "response": {
+                    "type": "http"
+                }
+            }
+        },
+        {
+            "tag":"IPv6_out",
+            "protocol": "freedom",
+            "settings": {
+                "domainStrategy": "UseIPv6"
+            }
+        },
+
+        {
+            "protocol": "wireguard",
+            "settings": {
+                "secretKey": "cIZw0W2LZfdt6mLEF0fdKunUfJW+fL7XCkXOQwAwhHQ=",
+                "address": [
+                    "172.16.0.2/32"
+                ],
+                "peers": [
+                    {
+                        "publicKey": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+                        "allowedIPs": [
+                            "0.0.0.0/0"
+                        ],
+                        "endpoint": "162.159.193.10:1701"
+                    }
+                ],
+                "reserved":[176,100,121],
+                "mtu": 1280
+            },
+            "tag": "wireguard"
+        }
+    ]
 }
